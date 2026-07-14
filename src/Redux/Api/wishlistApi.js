@@ -15,7 +15,7 @@ const addPrdToWishlist = (product) => {
 const deleteFromWishList = (product) => {
   return async (dispatch) => {
     try {
-      dispatch(wishlistActions.deleteFromWishListe(product));
+      dispatch(wishlistActions.deleteFromWishList(product));
       toast.success("Product deleted successfully");
     } catch (error) {
       toast.error(error.response?.data?.message);

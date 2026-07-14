@@ -5,6 +5,10 @@ node_modules/
 build/
 dist/
 
+# Compiled Sass output (Vite compiles src/Sass/style.scss at build time)
+src/Sass/style.css
+src/Sass/style.css.map
+
 # Environment variables
 .env
 .env.local

@@ -4,13 +4,13 @@ import { addPrdToCart } from "../Redux/Api/cartsApi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { IoMdEye, IoIosEyeOff } from "react-icons/io";
 import { addPrdToWishlist, deleteFromWishList } from "../Redux/Api/wishlistApi";
+import { activate } from "../utils/interactive";
 
 const MainProduct = ({ product }) => {
   const wishlist = useSelector((state) => state.wishList);
   const dispatch = useDispatch();
 
   // Handle Visibility
-  const [prdVisible, setPrdVisible] = useState("");
   const [hiddenProducts, setHiddenProducts] = useState([]);
 
   const handleProductVisiblity = (product) => {
@@ -23,7 +23,7 @@ const MainProduct = ({ product }) => {
 
   // Handle Toggle Wishlist And Cart
   const handleTogglePrdToWishlist = (product) => {
-    const findProduct = wishlist?.find((item) => item?.id == product?.id);
+    const findProduct = wishlist?.find((item) => item?.id === product?.id);
 
     if (!findProduct) {
       dispatch(addPrdToWishlist(product));
@@ -49,16 +49,17 @@ const MainProduct = ({ product }) => {
             />
             <span
               className={`${discountClassName} d-block`}
-              style={{ backgroundColor: "00FF66" }}
+              style={{ backgroundColor: "#00FF66" }}
             >
               Popular
             </span>
             <div className="outils d-flex flex-column position-absolute">
               <span
                 className="heart mb-2"
-                onClick={() => handleTogglePrdToWishlist(product)}
+                aria-label="Toggle wishlist"
+                {...activate(() => handleTogglePrdToWishlist(product))}
               >
-                {wishlist?.find((item) => item?.id == product?.id) ? (
+                {wishlist?.find((item) => item?.id === product?.id) ? (
                   <FaHeart className="fill" />
                 ) : (
                   <FaRegHeart className="empty" />
@@ -66,7 +67,8 @@ const MainProduct = ({ product }) => {
               </span>
               <span
                 className="visibility fs-5"
-                onClick={() => handleProductVisiblity(product)}
+                aria-label="Toggle product preview"
+                {...activate(() => handleProductVisiblity(product))}
               >
                 {hiddenProducts.includes(product.id) ? (
                   <IoIosEyeOff />
@@ -78,7 +80,8 @@ const MainProduct = ({ product }) => {
             <div className="addCart  position-absolute w-100 text-center pt-2 pb-1">
               <h1
                 className="fs-6 fw-bold text-capitalize p-0"
-                onClick={() => handleAddPrdToCart(product)}
+                aria-label="Add to cart"
+                {...activate(() => handleAddPrdToCart(product))}
               >
                 add to cart
               </h1>

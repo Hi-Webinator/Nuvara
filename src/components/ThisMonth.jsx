@@ -10,33 +10,30 @@ import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 
 import Header from "./Title";
 import Button from "./Button";
+import { activate } from "../utils/interactive";
 
 const ThisMonth = () => {
-  const { products } = useSelector((state) => state.products);
+  const { products, loading, error } = useSelector((state) => state.products);
   const wishlist = useSelector((state) => state.wishList);
   const dispatch = useDispatch();
 
-  const fourProducts = products?.slice(5, 9);
-  const fiveProducts = products?.slice(14, 18);
+  const fourProducts = products.slice(5, 9);
+  const fiveProducts = products.slice(14, 18);
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    if (!products.length) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
 
   // Handle click
-  const [isActive2, setActive2] = useState(false);
   const [isClicked, setClicked] = useState(false);
-
-  const handleClick2 = () => {
-    setActive2(!isActive2);
-  };
 
   const handleClicked = () => {
     setClicked(!isClicked);
   };
 
   // Handle Visibility
-  const [prdVisible, setPrdVisible] = useState("");
   const [hiddenProducts, setHiddenProducts] = useState([]);
 
   const handleProductVisiblity = (product) => {
@@ -49,7 +46,7 @@ const ThisMonth = () => {
 
   // Handle Toggle Wishlist And Cart
   const handleTogglePrdToWishlist = (product) => {
-    const findProduct = wishlist?.find((item) => item?.id == product?.id);
+    const findProduct = wishlist?.find((item) => item?.id === product?.id);
 
     if (!findProduct) {
       dispatch(addPrdToWishlist(product));
@@ -76,9 +73,9 @@ const ThisMonth = () => {
           />
         </div>
 
-        {fourProducts.loading && <h1>Loading...</h1>}
+        {loading && <h1>Loading...</h1>}
 
-        {!fourProducts.loading && fourProducts.length ? (
+        {!loading && fourProducts.length ? (
           <div className="row mt-4 mt-lg-5">
             {fourProducts.map((product) => (
               <div key={product.id} className="col-12 col-md-6 col-lg-3">
@@ -96,9 +93,10 @@ const ThisMonth = () => {
                       <div className="outils d-flex flex-column position-absolute">
                         <span
                           className="heart mb-2"
-                          onClick={() => handleTogglePrdToWishlist(product)}
+                          aria-label="Toggle wishlist"
+                          {...activate(() => handleTogglePrdToWishlist(product))}
                         >
-                          {wishlist?.find((item) => item?.id == product?.id) ? (
+                          {wishlist?.find((item) => item?.id === product?.id) ? (
                             <FaHeart className="fill" />
                           ) : (
                             <FaRegHeart className="empty" />
@@ -106,7 +104,8 @@ const ThisMonth = () => {
                         </span>
                         <span
                           className="visibility fs-5"
-                          onClick={() => handleProductVisiblity(product)}
+                          aria-label="Toggle product preview"
+                          {...activate(() => handleProductVisiblity(product))}
                         >
                           {hiddenProducts.includes(product.id) ? (
                             <IoIosEyeOff />
@@ -118,7 +117,8 @@ const ThisMonth = () => {
                       <div className="addCart btn position-absolute w-100 text-center pt-2 pb-1">
                         <h1
                           className="fs-6 fw-bold text-capitalize p-0"
-                          onClick={() => handleAddPrdToCart(product)}
+                          aria-label="Add to cart"
+                          {...activate(() => handleAddPrdToCart(product))}
                         >
                           add to cart
                         </h1>
@@ -171,7 +171,7 @@ const ThisMonth = () => {
                       <img
                         src={product.image}
                         className={`card-img-top p-5 ${hiddenProducts.includes(product.id) ? "disable" : ""}`}
-                        alt="product1"
+                        alt={product.title}
                       />
                       <span className="discount position-absolute pt-1 pb-1 ps-2 pe-2">
                         New
@@ -179,9 +179,10 @@ const ThisMonth = () => {
                       <div className="outils d-flex flex-column position-absolute">
                         <span
                           className="heart mb-2"
-                          onClick={() => handleTogglePrdToWishlist(product)}
+                          aria-label="Toggle wishlist"
+                          {...activate(() => handleTogglePrdToWishlist(product))}
                         >
-                          {wishlist?.find((item) => item?.id == product?.id) ? (
+                          {wishlist?.find((item) => item?.id === product?.id) ? (
                             <FaHeart className="fill" />
                           ) : (
                             <FaRegHeart className="empty" />
@@ -189,7 +190,8 @@ const ThisMonth = () => {
                         </span>
                         <span
                           className="visibility fs-5"
-                          onClick={() => handleProductVisiblity(product)}
+                          aria-label="Toggle product preview"
+                          {...activate(() => handleProductVisiblity(product))}
                         >
                           {hiddenProducts.includes(product.id) ? (
                             <IoIosEyeOff />
@@ -201,7 +203,8 @@ const ThisMonth = () => {
                       <div className="addCart btn position-absolute w-100 text-center pt-2 pb-1">
                         <h1
                           className="fs-6 fw-bold text-capitalize p-0"
-                          onClick={() => handleAddPrdToCart(product)}
+                          aria-label="Add to cart"
+                          {...activate(() => handleAddPrdToCart(product))}
                         >
                           add to cart
                         </h1>
@@ -243,9 +246,7 @@ const ThisMonth = () => {
           </div>
         ) : null}
 
-        {!products?.loading && products?.error ? (
-          <h1>Eroor : {products?.error}</h1>
-        ) : null}
+        {!loading && error ? <h1>Error: {error}</h1> : null}
       </div>
     </div>
   );

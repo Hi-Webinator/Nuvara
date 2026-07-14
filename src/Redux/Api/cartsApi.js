@@ -23,7 +23,7 @@ const deleteFromCart = (product) => {
   };
 };
 
-const clearCart = (product) => {
+const clearCart = () => {
   return async (dispatch) => {
     try {
       dispatch(cartActions.clear());

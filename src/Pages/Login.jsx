@@ -6,7 +6,14 @@ import shop1 from "../Assets/login.webp";
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
+import usePageMeta from "../utils/usePageMeta";
+
 const Login = () => {
+  usePageMeta({
+    title: "Login",
+    description: "Sign in to your Nuvara account.",
+  });
+
   return (
     <div className="login mt-5 mb-5">
       <div className="container">
@@ -20,7 +27,7 @@ const Login = () => {
           <div className="col-12 col-lg-5 mt-4 mt-lg-0 text-center text-lg-start">
             <div className="form">
               <div className="form-title d-flex align-items-center gap-2">
-                <h1 className="fs-2 mb-2 w-bold">Log in to Exclusive</h1>
+                <h1 className="fs-2 mb-2 fw-bold">Log in to Exclusive</h1>
                 <Link className="form-register" to="/register">(Create account)</Link>
               </div>
               <h1 className="fs-6 mb-4">Enter your details below</h1>
@@ -51,10 +58,10 @@ const Login = () => {
               </span>
 
               <div className="social mt-0">
-                <Link className="fb me-4">
+                <Link className="fb me-4" to="#" aria-label="Continue with Facebook">
                   <FaFacebookF size={23} />
                 </Link>
-                <Link className="google">
+                <Link className="google" to="#" aria-label="Continue with Google">
                   <FcGoogle size={23} />
                 </Link>
               </div>
