@@ -1,7 +1,15 @@
 import { FiPhone } from "react-icons/fi";
 import { MdOutlineMail } from "react-icons/md";
 
+import usePageMeta from "../utils/usePageMeta";
+
 const Contact = () => {
+  usePageMeta({
+    title: "Contact",
+    description:
+      "Get in touch with the Nuvara team — we respond within 24 hours.",
+  });
+
   return (
     <div className="contact mt-3 mt-lg-5 mb-5">
       <div className="container">
@@ -39,18 +47,21 @@ const Contact = () => {
                 <input
                   type="text"
                   placeholder="Your Name *"
+                  aria-label="Your name"
                   className="mb-2 mb-lg-0 p-2"
                   required
                 />
                 <input
-                  type="text"
+                  type="email"
                   placeholder="Your Email *"
+                  aria-label="Your email"
                   className="mb-2 mb-lg-0 p-2"
                   required
                 />
                 <input
-                  type="text"
+                  type="tel"
                   placeholder="Your Phone *"
+                  aria-label="Your phone number"
                   className="p-2"
                   required
                 />
@@ -60,6 +71,7 @@ const Contact = () => {
                 className="message p-2 mb-3"
                 rows={11}
                 placeholder="Write Your Message Here!"
+                aria-label="Your message"
                 required
               ></textarea>
 

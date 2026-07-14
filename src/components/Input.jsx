@@ -5,6 +5,7 @@ const Input = ({ type, ph }) => {
         type={type}
         className="form-control mainInput mb-4 w-100 ps-0"
         placeholder={ph}
+        aria-label={ph}
         required
       />
     </div>

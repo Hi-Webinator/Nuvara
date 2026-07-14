@@ -11,15 +11,22 @@ import Services from "../components/Services";
 import Arrivals from "../components/Arrivals";
 import Browse from "../components/Browse";
 
+import usePageMeta from "../utils/usePageMeta";
+import { activate } from "../utils/interactive";
+
 import image1 from "../Assets/parfum.webp";
 import image2 from "../Assets/ps5.webp";
 import image3 from "../Assets/psp.webp";
 import image4 from "../Assets/pc.webp";
 import image5 from "../Assets/ip15.webp";
 
-
-
 const Home = () => {
+  usePageMeta({
+    title: "Home",
+    description:
+      "Nuvara — premium fragrances, skincare, and beauty essentials delivered worldwide.",
+  });
+
   const [active1, setActive1] = useState(false);
   const [active2, setActive2] = useState(false);
 
@@ -41,7 +48,8 @@ const Home = () => {
               <div className="aside pt-4 d-flex flex-column">
                 <span
                   className="aside-item d-flex align-items-center position-relative"
-                  onClick={handleClick1}
+                  aria-expanded={active1}
+                  {...activate(handleClick1)}
                 >
                   Woman’s Fashion
                   {active1 ? (
@@ -52,7 +60,8 @@ const Home = () => {
                 </span>
                 <span
                   className="aside-item d-flex align-items-center position-relative"
-                  onClick={handleClick2}
+                  aria-expanded={active2}
+                  {...activate(handleClick2)}
                 >
                   Men’s Fashion
                   {active2 ? (
@@ -83,7 +92,11 @@ const Home = () => {
                   {images?.map((img, i) => {
                     return (
                       <SwiperSlide key={i}>
-                        <img className="img-fluid" src={img} alt="hero" />
+                        <img
+                          className="img-fluid"
+                          src={img}
+                          alt="Featured product"
+                        />
                       </SwiperSlide>
                     );
                   })}

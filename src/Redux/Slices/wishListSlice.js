@@ -15,7 +15,7 @@ const wishListSlice = createSlice({
         state.push(productClone);
       }
     },
-    deleteFromWishListe: (state, action) => {
+    deleteFromWishList: (state, action) => {
       return state.filter((product) => product.id !== action.payload.id);
     },
     clear: () => {

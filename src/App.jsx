@@ -2,14 +2,10 @@ import Layout from "./utils/Layout";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import "./Sass/style.css";
+import "./Sass/style.scss";
 
 function App() {
-  return (
-    <>
-      <Layout />
-    </>
-  );
+  return <Layout />;
 }
 
 export default App;

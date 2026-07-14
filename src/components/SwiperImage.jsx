@@ -45,7 +45,7 @@ const SwiperImage = () => {
           <img
             src={jbl}
             className="position-relative"
-            alt="jbl baf"
+            alt="JBL wireless speaker promotion"
           />
           <h1 className="categories fs-5 position-absolute text-capitalize">
             categories

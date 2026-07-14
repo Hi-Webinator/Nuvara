@@ -5,7 +5,14 @@ import shop1 from "../Assets/register.webp";
 
 import { FcGoogle } from "react-icons/fc";
 
+import usePageMeta from "../utils/usePageMeta";
+
 const Register = () => {
+  usePageMeta({
+    title: "Create Account",
+    description: "Create your Nuvara account to start shopping.",
+  });
+
   return (
     <div className="register up mt-5 mb-5">
       <div className="container">

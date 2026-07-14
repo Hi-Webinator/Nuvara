@@ -15,18 +15,27 @@ import { FiShoppingCart } from "react-icons/fi";
 
 import Header from "../components/Title";
 import Button from "../components/Button";
+import usePageMeta from "../utils/usePageMeta";
+import { activate } from "../utils/interactive";
 
 const WishList = () => {
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.products);
+  const { products, loading, error } = useSelector((state) => state.products);
   const wishlist = useSelector((state) => state.wishList);
 
-  const fourProducts = products?.slice(5, 9);
-  const fiveProducts = products?.slice(14, 18);
+  usePageMeta({
+    title: "Wishlist",
+    description: "The products you've saved for later at Nuvara.",
+  });
+
+  const fourProducts = products.slice(5, 9);
+  const fiveProducts = products.slice(14, 18);
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    if (!products.length) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
 
   //handle click
   const [isClicked, setClicked] = useState(false);
@@ -36,7 +45,6 @@ const WishList = () => {
   };
 
   // Handle Visibility
-  const [prdVisible, setPrdVisible] = useState("");
   const [hiddenProducts, setHiddenProducts] = useState([]);
 
   const handleProductVisiblity = (product) => {
@@ -49,7 +57,7 @@ const WishList = () => {
 
   // Handle Toggle Wishlist And Cart
   const handleTogglePrdToWishlist = (product) => {
-    const findProduct = wishlist?.find((item) => item?.id == product?.id);
+    const findProduct = wishlist?.find((item) => item?.id === product?.id);
 
     if (!findProduct) {
       dispatch(addPrdToWishlist(product));
@@ -70,8 +78,9 @@ const WishList = () => {
             Wishlist ({wishlist.length})
           </h5>
           <span
-            className={`clear p-4 pt-2 pb-2 ${wishlist.length == 0 && "d-none"}`}
-            onClick={() => dispatch(clearWishlist())}
+            className={`clear p-4 pt-2 pb-2 ${wishlist.length === 0 ? "d-none" : ""}`}
+            aria-label="Remove all items from wishlist"
+            {...activate(() => dispatch(clearWishlist()))}
           >
             Remove All
           </span>
@@ -87,20 +96,22 @@ const WishList = () => {
                       <img
                         src={product.image}
                         className="card-img-top p-5"
-                        alt="product1"
+                        alt={product.title}
                       />
                       <div className="outils position-absolute">
                         <span
                           className="heart"
-                          onClick={() => dispatch(deleteFromWishList(product))}
+                          aria-label="Remove from wishlist"
+                          {...activate(() => dispatch(deleteFromWishList(product)))}
                         >
                           <FaTrashAlt />
                         </span>
                       </div>
                       <div className="addCart btn position-absolute w-100 text-center pt-2 pb-1">
                         <h1
-                          className="fs-6 fw-bold d-felx align-items-center text-capitalize p-0"
-                          onClick={() => handleAddPrdToCart(product)}
+                          className="fs-6 fw-bold d-flex align-items-center text-capitalize p-0"
+                          aria-label="Add to cart"
+                          {...activate(() => handleAddPrdToCart(product))}
                         >
                           <FiShoppingCart className="me-2" />
                           add to cart
@@ -137,9 +148,9 @@ const WishList = () => {
             />
           </div>
 
-          {fourProducts.loading && <h1>Loading...</h1>}
+          {loading && <h1>Loading...</h1>}
 
-          {!fourProducts.loading && fourProducts.length ? (
+          {!loading && fourProducts.length ? (
             <div className="row mt-4 mt-lg-5">
               {fourProducts.map((product) => (
                 <div key={product.id} className="col-12 col-md-6 col-lg-3">
@@ -157,10 +168,11 @@ const WishList = () => {
                         <div className="outils d-flex flex-column position-absolute">
                           <span
                             className="heart mb-2"
-                            onClick={() => handleTogglePrdToWishlist(product)}
+                            aria-label="Toggle wishlist"
+                            {...activate(() => handleTogglePrdToWishlist(product))}
                           >
                             {wishlist?.find(
-                              (item) => item?.id == product?.id,
+                              (item) => item?.id === product?.id,
                             ) ? (
                               <FaHeart className="fill" />
                             ) : (
@@ -169,7 +181,8 @@ const WishList = () => {
                           </span>
                           <span
                             className="visibility fs-5"
-                            onClick={() => handleProductVisiblity(product)}
+                            aria-label="Toggle product preview"
+                            {...activate(() => handleProductVisiblity(product))}
                           >
                             {hiddenProducts.includes(product.id) ? (
                               <IoIosEyeOff />
@@ -181,7 +194,8 @@ const WishList = () => {
                         <div className="addCart btn position-absolute w-100 text-center pt-2 pb-1">
                           <h1
                             className="fs-6 fw-bold text-capitalize p-0"
-                            onClick={() => handleAddPrdToCart(product)}
+                            aria-label="Add to cart"
+                            {...activate(() => handleAddPrdToCart(product))}
                           >
                             add to cart
                           </h1>
@@ -227,7 +241,7 @@ const WishList = () => {
                         <img
                           src={product.image}
                           className={`card-img-top p-5 ${hiddenProducts.includes(product.id) ? "disable" : ""}`}
-                          alt="product1"
+                          alt={product.title}
                         />
                         <span className="discount position-absolute pt-1 pb-1 ps-2 pe-2">
                           New
@@ -235,10 +249,11 @@ const WishList = () => {
                         <div className="outils d-flex flex-column position-absolute">
                           <span
                             className="heart mb-2"
-                            onClick={() => handleTogglePrdToWishlist(product)}
+                            aria-label="Toggle wishlist"
+                            {...activate(() => handleTogglePrdToWishlist(product))}
                           >
                             {wishlist?.find(
-                              (item) => item?.id == product?.id,
+                              (item) => item?.id === product?.id,
                             ) ? (
                               <FaHeart className="fill" />
                             ) : (
@@ -247,7 +262,8 @@ const WishList = () => {
                           </span>
                           <span
                             className="visibility fs-5"
-                            onClick={() => handleProductVisiblity(product)}
+                            aria-label="Toggle product preview"
+                            {...activate(() => handleProductVisiblity(product))}
                           >
                             {hiddenProducts.includes(product.id) ? (
                               <IoIosEyeOff />
@@ -259,7 +275,8 @@ const WishList = () => {
                         <div className="addCart btn position-absolute w-100 text-center pt-2 pb-1">
                           <h1
                             className="fs-6 fw-bold text-capitalize p-0"
-                            onClick={() => handleAddPrdToCart(product)}
+                            aria-label="Add to cart"
+                            {...activate(() => handleAddPrdToCart(product))}
                           >
                             add to cart
                           </h1>
@@ -294,9 +311,7 @@ const WishList = () => {
             </div>
           ) : null}
 
-          {!products.loading && products.error ? (
-            <h1>Eroor : {products.error}</h1>
-          ) : null}
+          {!loading && error ? <h1>Error: {error}</h1> : null}
         </div>
       </div>
     </div>

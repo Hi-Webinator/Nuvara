@@ -8,20 +8,29 @@ import { addPrdToCart } from "../Redux/Api/cartsApi";
 import { FaHeart, FaStar, FaRegHeart } from "react-icons/fa";
 import { IoMdEye, IoIosEyeOff } from "react-icons/io";
 
+import usePageMeta from "../utils/usePageMeta";
+import { activate } from "../utils/interactive";
+
 const Products = () => {
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.products);
+  const { products, loading, error } = useSelector((state) => state.products);
   const wishlist = useSelector((state) => state.wishList);
 
-  // NEW: Filter state
+  usePageMeta({
+    title: "Products",
+    description:
+      "Browse the full Nuvara catalog — filter by category and add your favourites to cart or wishlist.",
+  });
+
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  // NEW: Extract unique categories from products
   const categories = ["all", ...new Set(products.map((p) => p.category))];
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, []);
+    if (!products.length) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
 
   // Filter products based on selected category
   const filteredProducts =
@@ -30,7 +39,6 @@ const Products = () => {
       : products.filter((p) => p.category === selectedCategory);
 
   // Handle Visibility
-  const [prdVisible, setPrdVisible] = useState("");
   const [hiddenProducts, setHiddenProducts] = useState([]);
 
   const handleProductVisiblity = (product) => {
@@ -43,7 +51,7 @@ const Products = () => {
 
   // Handle Toggle Wishlist And Cart
   const handleTogglePrdToWishlist = (product) => {
-    const findProduct = wishlist?.find((item) => item?.id == product?.id);
+    const findProduct = wishlist?.find((item) => item?.id === product?.id);
 
     if (!findProduct) {
       dispatch(addPrdToWishlist(product));
@@ -58,7 +66,7 @@ const Products = () => {
 
   return (
     <>
-      {products.loading && <h1>Loading...</h1>}
+      {loading && <h1>Loading...</h1>}
 
       <div className="container mt-3 mt-lg-5 mb-5">
         <h3 className="fw-bold fs-6 mb-0 text-black">
@@ -96,7 +104,7 @@ const Products = () => {
                       className={`card-img-top p-5 ${
                         hiddenProducts.includes(product.id) ? "disable" : ""
                       }`}
-                      alt="product1"
+                      alt={product.title}
                     />
                     <span className="discount position-absolute pt-1 pb-1 ps-2 pe-2">
                       New
@@ -104,7 +112,8 @@ const Products = () => {
                     <div className="outils d-flex flex-column position-absolute">
                       <span
                         className="heart"
-                        onClick={() => handleTogglePrdToWishlist(product)}
+                        aria-label="Toggle wishlist"
+                        {...activate(() => handleTogglePrdToWishlist(product))}
                       >
                         {wishlist?.find((item) => item?.id === product?.id) ? (
                           <FaHeart className="fill" />
@@ -114,7 +123,8 @@ const Products = () => {
                       </span>
                       <span
                         className="visibility fs-5"
-                        onClick={() => handleProductVisiblity(product)}
+                        aria-label="Toggle product preview"
+                        {...activate(() => handleProductVisiblity(product))}
                       >
                         {hiddenProducts.includes(product.id) ? (
                           <IoIosEyeOff />
@@ -126,7 +136,8 @@ const Products = () => {
                     <div className="addCart btn position-absolute w-100 text-center pt-2 pb-1">
                       <h1
                         className="fs-6 fw-bold text-capitalize p-0"
-                        onClick={() => handleAddPrdToCart(product)}
+                        aria-label="Add to cart"
+                        {...activate(() => handleAddPrdToCart(product))}
                       >
                         add to cart
                       </h1>
@@ -159,9 +170,7 @@ const Products = () => {
         </div>
       </div>
 
-      {!products.loading && products.error ? (
-        <h1>Error : {products.error}</h1>
-      ) : null}
+      {!loading && error ? <h1>Error: {error}</h1> : null}
     </>
   );
 };

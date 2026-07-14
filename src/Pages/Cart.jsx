@@ -7,10 +7,17 @@ import { FaTrashAlt } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 
 import Button from "../components/Button";
+import usePageMeta from "../utils/usePageMeta";
+import { activate } from "../utils/interactive";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+
+  usePageMeta({
+    title: "Cart",
+    description: "Review the items in your Nuvara shopping cart before checkout.",
+  });
 
   const percontageToSubstract = 2.5;
 
@@ -34,11 +41,8 @@ const Cart = () => {
       <div className="container">
         <div className="cart-title d-flex justify-content-between align-items-center mt-4 mb-4 mt-lg-5 mb-lg-5">
           <h5 className="fw-bold mb-0">Your Cart</h5>
-          <div
-            className={cart.length == 0 && "d-none"}
-            onClick={() => handleClearCart()}
-          >
-            <Button title="Clear All" />
+          <div className={cart.length === 0 ? "d-none" : ""}>
+            <Button title="Clear All" funct={handleClearCart} />
           </div>
         </div>
 
@@ -51,7 +55,8 @@ const Cart = () => {
                     <img src={product.image} alt={product.title} />
                     <span
                       className="del"
-                      onClick={() => handleDeleteFromCart(product)}
+                      aria-label={`Remove ${product.title} from cart`}
+                      {...activate(() => handleDeleteFromCart(product))}
                     >
                       <FaXmark color="white" />
                     </span>
@@ -79,7 +84,8 @@ const Cart = () => {
                     <span
                       className="text-danger fs-5"
                       style={{ cursor: "pointer" }}
-                      onClick={() => handleDeleteFromCart(product)}
+                      aria-label={`Remove ${product.title} from cart`}
+                      {...activate(() => handleDeleteFromCart(product))}
                     >
                       <FaTrashAlt />
                     </span>
@@ -90,7 +96,7 @@ const Cart = () => {
           );
         })}
 
-        <div className={`helpers ${cart.length == 0 && "d-none"}`}>
+        <div className={`helpers ${cart.length === 0 ? "d-none" : ""}`}>
           <div className="row mt-2 mt-lg-4">
             <div className="col-12 col-lg-7 mb-4 mb-lg-0 d-none d-lg-block">
               <Link to="/products" className="return btn p-2 ps-4 pe-4">
