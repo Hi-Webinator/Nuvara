@@ -23,7 +23,7 @@ wishlist, build a cart, and complete a simulated checkout. State is managed with
 Redux Toolkit, styling is authored in Sass on top of Bootstrap 5, and the whole
 app is bundled and served by Vite with route-level code splitting.
 
-> **Live Demo:** _add your deployment URL here_ · **Case Study:** _optional writeup link_
+> **Live Demo:** _nuvara-store.vercel.app_ · **Case Study:** _https://www.behance.net/gallery/249175953/NUVARA-Luxury-Ecommerce-Website_
 
 ---
 
